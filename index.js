@@ -24,7 +24,6 @@ import radiosCombinados from "./capas/radios_combinados.json" assert { type: "js
 import datosEspaciosVerdes4Años from "./capas/datosEspaciosVerdes4Años.json" assert { type: "json" };
 // END IMPORTACIONES
 
-console.log(datosEspaciosVerdes4Años);
 // DEFINICIONES
 const map = L.map("map", {
   center: [-38.9410802, -68.1854411],
@@ -256,7 +255,7 @@ const colors = {
     "#006d2c",
   ],
   tipos: ["#2c9699", "#7E52A0", "#f4dd51", "#f06937", "#ea1d4b", "#a72071"],
-  arbolado: ["#edf8e9", "#c7e9c0", "#a1d99b", "#74c476", "#31a354", "#006d2c"],
+  arbolado: ["#A3E635", "#84CC16", "#65A30D", "#4D7C0F", "#3F6212", "#365314"],
   absorcion: ["#d0d1e6", "#a6bddb", "#74a9cf", "#3690c0", "#0570b0", "#034e7b"],
   superficie: [
     "#ffffd4",
@@ -391,7 +390,7 @@ const handleClickLocalidades = (e) => {
   let target = localidades.find((e) => e.id === targetId);
   map.flyTo(target.loc, target.zoom);
   cambiarATabDetalle();
-  cargarDetalle(target.nombre);
+  /* cargarDetalle(target.nombre); */
   cerrarSidebar();
   setTimeout(() => {
     abrirSidebar();
@@ -687,17 +686,27 @@ const agregarRadios = () => {
   })
     .bindTooltip(
       (layer) => {
-        console.log(layer.feature.properties.layer);
-        switch (layer.feature.properties.layer) {
+        console.log(layer.feature.properties.supm2);
+        if (layer.feature.properties.supm2 <= 30000) {
+          return "5' a pie de la plaza";
+        } else if (
+          layer.feature.properties.supm2 > 30000 &&
+          layer.feature.properties.supm2 < 100000
+        ) {
+          return "10' a pie de la plaza";
+        } else {
+          return "15' a pie de la plaza";
+        }
+        /*   switch (layer.feature.properties.layer) {
           case "buffer_300m_plazas_posgar":
-            return "Radio de cobertura de 300m";
+            return "5' a pie de la plaza";
 
           case "buffer_500m_plazas_posgar":
-            return "Radio de cobertura de 500m";
+            return "10' a pie de la plaza";
 
           default:
-            return "Radio de cobertura de 900m";
-        }
+            return "15' a pie de la plaza";
+        } */
       },
       {
         sticky: false,
@@ -722,7 +731,7 @@ const agregarRadiosNotVerde = () => {
   })
     .bindTooltip(
       () => {
-        return "Radio de cobertura de 900m";
+        return "15' a pie.";
       },
       {
         sticky: false,
@@ -746,10 +755,13 @@ const agregarLocalidadesAlista = () => {
     return 0;
   });
 
-  let listaLi = localidades.map(
-    (e) =>
-      `<li class='bg-green-700 text-white text-center rounded localidad cursor-pointer h-8 flex items-center justify-center font-bold hover:scale-105 duration-300 hover:shadow-lg hover:shadow-green-600' id=${e.id}>${e.nombre}</li>`
-  );
+  let listaLi = localidades.map((e) => {
+    if (e.nombre != "Neuquén Capital") {
+      return `<li class='bg-green-700 text-white text-center rounded localidad cursor-pointer h-8 flex items-center justify-center font-bold hover:scale-105 duration-300 hover:shadow-lg hover:shadow-green-600' id=${e.id}>${e.nombre}</li>`;
+    } else {
+      return `<li class='bg-yellow-500 text-white text-center rounded localidad cursor-pointer h-8 flex items-center justify-center font-bold hover:scale-105 duration-300 hover:shadow-lg hover:shadow-yellow-600' id=${e.id}>${e.nombre}</li>`;
+    }
+  });
   let concatenado = [];
   for (let i = 0; i < listaLi.length; i++) {
     concatenado += listaLi[i];
@@ -879,7 +891,7 @@ const agregarIndice = (tipo) => {
             "<br>";
         }
         div.innerHTML =
-          `<h2 class='text-blue-500 font-bold my-2'>Absorcion</h2>` +
+          `<h2 class='text-blue-500 font-bold my-2'>Absorción</h2>` +
           listaIndices;
 
         return div;
@@ -1103,7 +1115,7 @@ info.update = function (props, espaciosVerdes) {
           : "Datos de la capa"
       }</h4>` +
       (props
-        ? `<i class="fa-solid fa-droplet"></i></i> Absorcion: <br/> ${calcularPorcentajes(
+        ? `<i class="fa-solid fa-droplet"></i></i> Absorción: <br/> ${calcularPorcentajes(
             props.suel_absor
           )} en relacion a m<sup>2</sup>` +
           "<br />" +
@@ -1323,10 +1335,10 @@ const chartAbsorcion = new Chart(ctxChartAbsorcion, {
   plugins: [ChartDataLabels],
   data: {
     labels: [
-      "Absorcion de 0 a 25%",
-      "Absorcion de 25 a 50%",
-      "Absorcion de 50 a 75%",
-      "Absorcion de 75 a 100%",
+      "Absorción de 0 a 25%",
+      "Absorción de 25 a 50%",
+      "Absorción de 50 a 75%",
+      "Absorción de 75 a 100%",
     ],
     datasets: [
       {
@@ -1422,7 +1434,7 @@ const chartArbolado = new Chart(ctxChartArbolado, {
           datosNeuquen[5].arbolado75A100,
         ],
         borderWidth: 1,
-        backgroundColor: ["#a1d99b", "#74c476", "#31a354", "#006d2c"],
+        backgroundColor: ["#A3E635", "#84CC16", "#65A30D", "#4D7C0F"],
       },
     ],
   },

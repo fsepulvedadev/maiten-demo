@@ -1,5 +1,14 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: "Harabara";
+  src: url("./assets/fonts/Harabara\ Mais\ Demo.otf");
+}
+
 #map {
-  height: 85vh;
+  height: 83vh;
   width: 100%;
 }
 
@@ -10,7 +19,7 @@
 }
 
 .leaflet-sidebar-header {
-  background-color: #15803d;
+  background-color: #057a55;
 }
 
 .leaflet-sidebar-tabs > li > a,
@@ -20,7 +29,7 @@
 
 .leaflet-sidebar-tabs > li.active,
 .leaflet-sidebar-tabs > ul > li.active {
-  background-color: #15803d;
+  background-color: #057a55;
 }
 .leaflet-sidebar-tabs > li.active,
 .leaflet-sidebar-tabs > ul > li.active i {
